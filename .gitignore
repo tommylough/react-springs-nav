@@ -7,6 +7,7 @@
 app/.sass-cache
 app/public/js/vendor.js
 *.sass-cache*
+*.eslintcache
 
 # Packages #
 ############
