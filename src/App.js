@@ -1,4 +1,3 @@
-import ReactDOM from "react-dom";
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -12,6 +11,7 @@ import { useSprings } from "react-spring";
 import { Main, GlobalStyle, Panel, Button } from "./styles";
 
 const topOffset = 20;
+let selectedIndex = null;
 const panels = [
   {
     title: "Panel1",
@@ -126,17 +126,54 @@ function Invitations({ id, handleClick }) {
   );
 }
 
-function Panels() {
-  //const [selectedIndex, setSelectedIndex] = useState(null);
+function Home() {
+  //const [selectedIndex, setSelectedIndex] = useState();
   const [open, setOpen] = useState(true);
+  const [springs, setSpring] = useSprings(panels.length, (index) => {
+    if (selectedIndex || selectedIndex === 0) {
+      if (index === selectedIndex) {
+        return {
+          ...panels[index],
+          top: 0,
+          height: window.innerHeight,
+        };
+      } else {
+        return {
+          ...panels[index],
+          top: (panels[index].top = index * 160),
+          marginLeft: -820,
+        };
+      }
+    } else {
+      return panels[index];
+    }
+  });
   const history = useHistory();
 
   useEffect(() => {
-    console.log("on load");
-    setSpring((index) => ({
-      top: (panels[index].top = index * 160),
-    }));
-  }, []);
+    console.log("on load", selectedIndex);
+    if (selectedIndex || selectedIndex === 0) {
+      setSpring((index) => {
+        if (index === selectedIndex) {
+          return {
+            top: (panels[index].top = index * 160),
+            height: panels[index].height,
+          };
+        } else {
+          return {
+            delay: 300,
+            to: {
+              marginLeft: panels[index].marginLeft,
+            },
+          };
+        }
+      });
+    } else {
+      setSpring((index) => ({
+        top: (panels[index].top = index * 160),
+      }));
+    }
+  }, [setSpring]);
 
   useEffect(() => {
     return () => {
@@ -170,15 +207,11 @@ function Panels() {
   };
 
   const setSelected = (id) => {
+    selectedIndex = id;
     setSpring((index) => {
       return index === id ? animateSelected(id) : animateUnselected(id);
     });
   };
-
-  const [springs, setSpring] = useSprings(
-    panels.length,
-    (index) => panels[index]
-  );
 
   const handleClick = (e, id) => {
     setSelected(id);
@@ -216,7 +249,7 @@ function App() {
           <Route
             exact
             path="/"
-            render={(props) => <Panels {...props} id={null} />}
+            render={(props) => <Home {...props} id={null} />}
           />
           <Route
             exact
