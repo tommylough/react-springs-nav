@@ -42,18 +42,18 @@ const panels = [
   },
 ];
 
-function Todos({ id, handleClick }) {
+function TheThing({ id }) {
   const history = useHistory();
   return (
     <>
+      <Button
+        onClick={() => {
+          history.push("/");
+        }}
+      >
+        Back
+      </Button>
       <Main>
-        <Button
-          onClick={() => {
-            history.push("/");
-          }}
-        >
-          Back
-        </Button>
         <GlobalStyle />
         <Panel
           style={{
@@ -70,60 +70,16 @@ function Todos({ id, handleClick }) {
   );
 }
 
-function People({ id, handleClick }) {
-  const history = useHistory();
-  return (
-    <>
-      <Main>
-        <Button
-          onClick={() => {
-            history.push("/");
-          }}
-        >
-          Back
-        </Button>
-        <GlobalStyle />
-        <Panel
-          style={{
-            top: 0,
-            marginLeft: panels[id].marginLeft,
-            height: window.innerHeight,
-          }}
-          background={panels[id].background}
-        >
-          <p>{panels[id].title}</p>
-        </Panel>
-      </Main>
-    </>
-  );
+function Todos({ id }) {
+  return TheThing({ id });
 }
 
-function Invitations({ id, handleClick }) {
-  const history = useHistory();
-  return (
-    <>
-      <Main>
-        <Button
-          onClick={() => {
-            history.push("/");
-          }}
-        >
-          Back
-        </Button>
-        <GlobalStyle />
-        <Panel
-          style={{
-            top: 0,
-            marginLeft: panels[id].marginLeft,
-            height: window.innerHeight,
-          }}
-          background={panels[id].background}
-        >
-          <p>{panels[id].title}</p>
-        </Panel>
-      </Main>
-    </>
-  );
+function People({ id }) {
+  return TheThing({ id });
+}
+
+function Invitations({ id }) {
+  return TheThing({ id });
 }
 
 function Home() {
@@ -192,7 +148,7 @@ function Home() {
         //await next({ height: window.innerHeight });
       },
       onRest: () => {
-        console.log("onRest", id);
+        console.log("onRest", id, panels[id].route);
         history.push(panels[id].route);
       },
     };
@@ -220,6 +176,13 @@ function Home() {
 
   return (
     <>
+      <Button
+        onClick={() => {
+          history.push("/");
+        }}
+      >
+        Back
+      </Button>
       <Main>
         <GlobalStyle />
         <>
